@@ -19,4 +19,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GeometricService.Domain\GeometricService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
