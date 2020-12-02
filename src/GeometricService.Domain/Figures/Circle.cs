@@ -14,5 +14,7 @@ namespace GeometricService.Domain.Figures
         }
 
         public double Area => Math.PI * Math.Pow(_radius, 2);
+
+        public double Radius => _radius;
     }
 }

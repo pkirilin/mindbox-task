@@ -47,5 +47,11 @@ namespace GeometricService.Domain.Figures
                     * halfPerimeterWithoutSideThree);
             }
         }
+
+        public double SideOne => _sideOne;
+
+        public double SideTwo => _sideTwo;
+
+        public double SideThree => _sideThree;
     }
 }

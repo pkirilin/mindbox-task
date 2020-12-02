@@ -1,3 +1,6 @@
+using GeometricService.Domain.Enums;
+using GeometricService.Domain.Extensions;
+using GeometricService.Domain.Factories;
 using GeometricService.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +24,13 @@ namespace GeometricService.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructure(Configuration.GetConnectionString("GeometricServiceContext"));
+
+            services.AddFigureResolver(builder =>
+            {
+                builder.RegisterFigure(FigureType.Circle, new CircleFactory());
+                builder.RegisterFigure(FigureType.Triangle, new TriangleFactory());
+            });
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
