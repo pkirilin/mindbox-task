@@ -17,15 +17,15 @@ namespace GeometricService.Domain.Figures
             Ensure.GreaterThanZero(sideTwo, AssertionTargetName, nameof(sideTwo));
             Ensure.GreaterThanZero(sideThree, AssertionTargetName, nameof(sideThree));
 
-            if (!IsTriangleExists(sideOne, sideTwo, sideThree))
-                throw new ArgumentException($"Such triangle does not exists ({sideOne}, {sideTwo}, {sideThree})");
+            if (!Exists(sideOne, sideTwo, sideThree))
+                throw new ArgumentException($"Such triangle does not exist ({sideOne}, {sideTwo}, {sideThree})");
 
             _sideOne = sideOne;
             _sideTwo = sideTwo;
             _sideThree = sideThree;
         }
 
-        private static bool IsTriangleExists(double sideOne, double sideTwo, double sideThree)
+        public static bool Exists(double sideOne, double sideTwo, double sideThree)
         {
             return sideOne + sideTwo > sideThree
                 && sideOne + sideThree > sideTwo

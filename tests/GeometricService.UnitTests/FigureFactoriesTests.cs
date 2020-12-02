@@ -110,5 +110,21 @@ namespace GeometricService.UnitTests
             Assert.False(result);
             Assert.Equal("Triangle sides cannot be less or equal zero", message);
         }
+
+        [Theory]
+        [InlineData(3, 5, 100)]
+        [InlineData(12.54, 35, 9.04)]
+        public void TriangleFactory_ShouldValidateTriangleExistence(double sideOne, double sideTwo, double sideThree)
+        {
+            // Arrange
+            var parameters = new double[] { sideOne, sideTwo, sideThree };
+            var factory = new TriangleFactory();
+
+            // Act
+            var result = factory.TryParseFigureParameters(parameters, out _);
+
+            // Assert
+            Assert.False(result);
+        }
     }
 }

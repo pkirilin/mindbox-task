@@ -17,9 +17,19 @@ namespace GeometricService.Domain.Factories
                 return false;
             }
 
-            if (parameters[0] <= 0 || parameters[1] <= 0 || parameters[2] <= 0)
+            var sideOne = parameters[0];
+            var sideTwo = parameters[1];
+            var sideThree = parameters[2];
+
+            if (sideOne <= 0 || sideTwo <= 0 || sideThree <= 0)
             {
                 errorMessage = "Triangle sides cannot be less or equal zero";
+                return false;
+            }
+
+            if (!Triangle.Exists(sideOne, sideTwo, sideThree))
+            {
+                errorMessage = $"Triangle with sides ({sideOne}, {sideTwo}, {sideThree}) does not exist";
                 return false;
             }
 
