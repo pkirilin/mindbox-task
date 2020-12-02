@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GeometricService.WebApi.Controllers
 {
     [ApiController]
-    [Route("v1/figures")]
+    [Route("figure")]
     public class FiguresController : ControllerBase
     {
         private readonly IFiguresRepository _figuresRepository;
@@ -43,15 +43,15 @@ namespace GeometricService.WebApi.Controllers
             return Ok(createdFigure.Id);
         }
 
-        [HttpGet("{figureId}/area")]
+        [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(double))]
         [ProducesResponseType(404, Type = typeof(string))]
-        public async Task<IActionResult> CalculateFigureArea([FromRoute] int figureId, CancellationToken cancellationToken)
+        public async Task<IActionResult> CalculateFigureArea([FromRoute] int id, CancellationToken cancellationToken)
         {
-            var figureEntity = await _figuresRepository.GetByIdAsync(figureId, cancellationToken);
+            var figureEntity = await _figuresRepository.GetByIdAsync(id, cancellationToken);
 
             if (figureEntity == null)
-                return NotFound($"Figure with id = {figureId} not found");
+                return NotFound($"Figure with id = {id} not found");
 
             var targetFigure = _figureResolver.GetFigure(figureEntity.Type, figureEntity.Parameters);
             return Ok(targetFigure.Area);
