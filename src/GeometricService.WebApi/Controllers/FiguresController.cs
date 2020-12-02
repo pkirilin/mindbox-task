@@ -43,7 +43,7 @@ namespace GeometricService.WebApi.Controllers
             return Ok(createdFigure.Id);
         }
 
-        [HttpGet("{figureId}/calculate-area")]
+        [HttpGet("{figureId}/area")]
         [ProducesResponseType(200, Type = typeof(double))]
         [ProducesResponseType(404, Type = typeof(string))]
         public async Task<IActionResult> CalculateFigureArea([FromRoute] int figureId, CancellationToken cancellationToken)
