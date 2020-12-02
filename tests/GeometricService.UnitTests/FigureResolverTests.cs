@@ -2,6 +2,7 @@
 using GeometricService.Domain.Abstractions;
 using GeometricService.Domain.Enums;
 using Moq;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -91,9 +92,8 @@ namespace GeometricService.UnitTests
         }
 
         [Fact]
-        public void GetFigure_ShouldReturnNull_IfFigureTypeKeyDoesNotExist()
+        public void GetFigure_ShouldThrowInvalidOperationException_IfFigureTypeKeyDoesNotExist()
         {
-            // Arrange
             var factoryMock = new Mock<FigureFactory>();
             var factories = new Dictionary<FigureType, FigureFactory>()
             {
@@ -102,12 +102,10 @@ namespace GeometricService.UnitTests
             var resolver = new FigureResolver(factories);
             var parameters = new double[] { 1, 2, 3 };
 
-            // Act
-            var figure = resolver.GetFigure(FigureType.Triangle, parameters);
-
-            // Assert
-            factoryMock.Verify(f => f.CreateFigure(parameters), Times.Never);
-            Assert.Null(figure);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                resolver.GetFigure(FigureType.Triangle, parameters);
+            });
         }
     }
 }

@@ -35,7 +35,7 @@ namespace GeometricService.Domain
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
             if (!_figureFactories.ContainsKey(type))
-                return null;
+                throw new InvalidOperationException($"Cannot resolve figure for type = {type}. Ensure that figure with type = {type} is supported");
 
             return _figureFactories[type].CreateFigure(parameters);
         }

@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GeometricService.Domain.Abstractions;
+using GeometricService.Domain.Entities;
+using GeometricService.Domain.Repositories;
 using GeometricService.WebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,24 +12,49 @@ namespace GeometricService.WebApi.Controllers
     [Route("v1/figures")]
     public class FiguresController : ControllerBase
     {
-        public FiguresController()
+        private readonly IFiguresRepository _figuresRepository;
+        private readonly IFigureResolver _figureResolver;
+
+        public FiguresController(IFiguresRepository figuresRepository, IFigureResolver figureResolver)
         {
+            _figuresRepository = figuresRepository;
+            _figureResolver = figureResolver;
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> SaveFigure([FromBody] FigureDto figureDto)
+        [ProducesResponseType(200, Type = typeof(int))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        public async Task<IActionResult> SaveFigure([FromBody] FigureDto figureDto, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            return Ok();
+            if (!_figureResolver.IsFigureTypeSupported(figureDto.Type))
+                return BadRequest($"Figure type = {figureDto.Type} is not supported");
+
+            if (!_figureResolver.TryParseFigureParameters(figureDto.Type, figureDto.Parameters, out var errorMessage))
+                return BadRequest(errorMessage);
+
+            var figure = new Figure()
+            {
+                Parameters = figureDto.Parameters,
+                Type = figureDto.Type
+            };
+
+            var createdFigure = _figuresRepository.Add(figure);
+            await _figuresRepository.SaveAsync(cancellationToken);
+            return Ok(createdFigure.Id);
         }
 
         [HttpGet("{figureId}/calculate-area")]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> CalculateFigureArea([FromRoute] int figureId)
+        [ProducesResponseType(200, Type = typeof(double))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public async Task<IActionResult> CalculateFigureArea([FromRoute] int figureId, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            return Ok();
+            var figureEntity = await _figuresRepository.GetByIdAsync(figureId, cancellationToken);
+
+            if (figureEntity == null)
+                return NotFound($"Figure with id = {figureId} not found");
+
+            var targetFigure = _figureResolver.GetFigure(figureEntity.Type, figureEntity.Parameters);
+            return Ok(targetFigure.Area);
         }
     }
 }

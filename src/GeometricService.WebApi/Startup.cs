@@ -50,6 +50,7 @@ namespace GeometricService.WebApi
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

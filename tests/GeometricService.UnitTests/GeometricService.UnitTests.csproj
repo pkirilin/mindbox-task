@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GeometricService.Domain\GeometricService.Domain.csproj" />
+    <ProjectReference Include="..\..\src\GeometricService.WebApi\GeometricService.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
